@@ -44,7 +44,6 @@ jobs:
             if [ "$CONTENT" = "version-bump" ]; then
               echo "is_release=true" >> $GITHUB_OUTPUT
             else
-              echo "No release tag found"
               echo "is_release=false" >> $GITHUB_OUTPUT
             fi
           else
