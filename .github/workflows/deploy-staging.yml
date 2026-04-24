@@ -32,14 +32,20 @@ jobs:
           fetch-depth: 1
       - name: Check commit message
         run: |
+          echo "Event: ${{ github.event_name }}"
           if [ "${{ github.event_name }}" == "workflow_run" ]; then
+            echo "Checking workflow_run event"
             MESSAGE=$(git log -1 --format=%s)
+            echo "Commit message: $MESSAGE"
             if echo "$MESSAGE" | grep -q "chore(release):"; then
+              echo "Found release tag in message"
               echo "is_release=true" >> $GITHUB_OUTPUT
             else
+              echo "No release tag found"
               echo "is_release=false" >> $GITHUB_OUTPUT
             fi
           else
+            echo "Not workflow_run, setting is_release=true"
             echo "is_release=true" >> $GITHUB_OUTPUT
           fi
         id: check
