@@ -1,3 +1,9 @@
+# [2.1.0](https://github.com/qlagraula/ci-test-semantic-release/compare/v2.0.0...v2.1.0) (2026-04-24)
+
+### Features
+
+- bump minor ([#11](https://github.com/qlagraula/ci-test-semantic-release/issues/11)) ([74c48b7](https://github.com/qlagraula/ci-test-semantic-release/commit/74c48b70383668b15bf4651152a38dc6bfe67ea0))
+
 # [2.0.0](https://github.com/qlagraula/ci-test-semantic-release/compare/v1.2.0...v2.0.0) (2026-04-24)
 
 ### Features
