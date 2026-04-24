@@ -20,18 +20,48 @@ permissions:
   id-token: write
 
 jobs:
+  check-release:
+    name: Check release
+    outputs:
+      is_release: ${{ steps.check.outputs.is_release }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.ref_name }}
+          fetch-depth: 1
+      - name: Check commit message
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_run" ]; then
+            MESSAGE=$(git log -1 --format=%s)
+            if echo "$MESSAGE" | grep -q "release:"; then
+              echo "is_release=true" >> $GITHUB_OUTPUT
+            else
+              echo "is_release=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "is_release=true" >> $GITHUB_OUTPUT
+          fi
+        id: check
+
   lint:
     name: Lint
+    needs: [check-release]
+    if: needs.check-release.outputs.is_release == 'true'
     uses: ./.github/workflows/lint.yml
     secrets: inherit
 
   build:
     name: Build
+    needs: [check-release]
+    if: needs.check-release.outputs.is_release == 'true'
     uses: ./.github/workflows/build.yml
     secrets: inherit
 
   test:
     name: Test
+    needs: [check-release]
+    if: needs.check-release.outputs.is_release == 'true'
     uses: ./.github/workflows/test.yml
     secrets: inherit
 
