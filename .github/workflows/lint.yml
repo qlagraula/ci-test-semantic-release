@@ -1,0 +1,27 @@
+name: Lint
+
+env:
+  NODE_VERSION: '24'
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: showroomtech/gh-actions-catalog/node/setup@v1.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Run linter
+        run: pnpm turbo lint typecheck format:check --continue=dependencies-successful

@@ -1,0 +1,49 @@
+name: CI
+
+env:
+  NODE_VERSION: '24'
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+  checks: write
+  id-token: write
+
+jobs:
+  lint:
+    name: Lint
+    uses: ./.github/workflows/lint.yml
+    secrets: inherit
+
+  build:
+    name: Build
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+
+  test:
+    name: Test
+    uses: ./.github/workflows/test.yml
+    secrets: inherit
+
+  deploy-preview:
+    name: Deploy preview
+    needs: [build, test, lint]
+    if: |
+      github.event_name == 'pull_request' 
+      && (startsWith(github.actor, 'dependabot') == false)
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: staging-preview
+      message: ${{ github.event.pull_request.title }}

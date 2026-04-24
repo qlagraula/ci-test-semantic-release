@@ -1,0 +1,44 @@
+name: Deploy Staging
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: read
+  actions: read
+  checks: write
+  id-token: write
+
+jobs:
+  lint:
+    name: Lint
+    uses: ./.github/workflows/lint.yml
+    secrets: inherit
+
+  build:
+    name: Build
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+
+  test:
+    name: Test
+    uses: ./.github/workflows/test.yml
+    secrets: inherit
+
+  deploy-staging:
+    name: Deploy staging
+    needs: [build, test, lint]
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: staging
+      message: ${{ github.ref_name }}
+
+  deploy-prod-preview:
+    name: Deploy production preview
+    needs: [deploy-staging]
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: production-preview
+      message: ${{ github.ref_name }}

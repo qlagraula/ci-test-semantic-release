@@ -1,0 +1,46 @@
+name: Deploy
+
+env:
+  NODE_VERSION: '24'
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      message:
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  lint:
+    name: Deploy
+    runs-on: ubuntu-24.04
+    environment:
+      name: ${{ inputs.environment }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: showroomtech/gh-actions-catalog/node/setup@v1.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: build
+          path: dist/
+
+      - name: Get commit message
+        id: commit
+        run: |
+          MESSAGE=$(git log -1 --pretty=%s ${{ github.sha }})
+          echo "Commit message: $MESSAGE"
+          echo "message=$MESSAGE" >> $GITHUB_OUTPUT

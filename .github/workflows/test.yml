@@ -1,0 +1,30 @@
+name: Test
+
+env:
+  NODE_VERSION: '24'
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+  actions: read
+  checks: write
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: showroomtech/gh-actions-catalog/node/setup@v1.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Run test with coverage
+        uses: showroomtech/gh-actions-catalog/node/test@v1.1.0
+        with:
+          test-command: pnpm run test:ci

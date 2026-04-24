@@ -1,0 +1,45 @@
+{
+  "name": "ci-test",
+  "version": "0.0.0",
+  "private": true,
+  "sideEffects": false,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --outDir dist",
+    "codegen": "echo \"no codegen defined\"",
+    "dev": "node --watch src/index.ts",
+    "e2e": "echo \"no e2e test defined\"",
+    "format": "prettier --write",
+    "format:check": "prettier --check .",
+    "lint": "eslint --no-error-on-unmatched-pattern .",
+    "release": "semantic-release",
+    "test": "echo \"no test defined\"",
+    "test:ci": "echo \"no test defined\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.6",
+    "@semantic-release/npm": "^12.0.2",
+    "@semantic-release/release-notes-generator": "^14.1.0",
+    "@types/eslint": "^9.6.1",
+    "@types/node": "^25.6.0",
+    "@typescript-eslint/eslint-plugin": "^8.58.1",
+    "@typescript-eslint/parser": "^8.58.1",
+    "eslint": "^10.2.0",
+    "globals": "^17.5.0",
+    "prettier": "^3.8.2",
+    "prettier-plugin-packagejson": "^3.0.2",
+    "semantic-release": "^24.2.9",
+    "turbo": "^2.9.6",
+    "typescript": "^5.9.3"
+  },
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

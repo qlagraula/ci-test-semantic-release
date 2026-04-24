@@ -1,0 +1,28 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "tasks": {
+    "dev": {
+      "dependsOn": ["codegen"],
+      "cache": false,
+      "persistent": true
+    },
+    "codegen": {},
+    "format": {},
+    "format:check": {},
+    "lint": {
+      "dependsOn": ["codegen"]
+    },
+    "build": {
+      "dependsOn": ["codegen"]
+    },
+    "typecheck": {
+      "dependsOn": ["codegen"]
+    }
+  },
+  "globalEnv": [
+    "CONTENTFUL_ENVIRONMENT",
+    "CONTENTFUL_SPACE_ID",
+    "CONTENTFUL_MANAGEMENT_TOKEN"
+  ],
+  "ui": "tui"
+}

@@ -1,0 +1,43 @@
+name: Deploy Production
+
+env:
+  SHOPIFY_CLI_TTY: 0
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+  checks: write
+  id-token: write
+
+jobs:
+  lint:
+    name: Lint
+    uses: ./.github/workflows/lint.yml
+    secrets: inherit
+
+  build:
+    name: Build
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+
+  test:
+    name: Test
+    uses: ./.github/workflows/test.yml
+    secrets: inherit
+
+  deploy-prod:
+    name: Deploy production
+    needs: [build, test, lint]
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: production
+      message: ${{ github.event.release.name }}
