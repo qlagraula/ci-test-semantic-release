@@ -15,3 +15,4 @@ console.log(
 console.log(
   'Remember to follow the Conventional Commits format for your commit messages to ensure that the CI pipeline can validate them correctly.',
 );
+console.log('Happy coding and testing!');
