@@ -1,8 +1,5 @@
 name: Deploy Production
 
-env:
-  SHOPIFY_CLI_TTY: 0
-
 on:
   release:
     types: [published]
