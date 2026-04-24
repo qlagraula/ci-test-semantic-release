@@ -26,19 +26,19 @@ jobs:
       is_release: ${{ steps.check.outputs.is_release }}
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - name: Download release info
+        uses: actions/download-artifact@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha || github.ref_name }}
-          fetch-depth: 1
-      - name: Check commit message
+          name: release-info
+        continue-on-error: true
+
+      - name: Check if version bump
+        id: check
         run: |
-          echo "Event: ${{ github.event_name }}"
-          if [ "${{ github.event_name }}" == "workflow_run" ]; then
-            echo "Checking workflow_run event"
-            MESSAGE=$(git log -1 --format=%s)
-            echo "Commit message: $MESSAGE"
-            if echo "$MESSAGE" | grep -q "chore(release):"; then
-              echo "Found release tag in message"
+          if [ -f release-info.txt ]; then
+            CONTENT=$(cat release-info.txt)
+            echo "Release info: $CONTENT"
+            if [ "$CONTENT" = "version-bump" ]; then
               echo "is_release=true" >> $GITHUB_OUTPUT
             else
               echo "No release tag found"
@@ -48,7 +48,6 @@ jobs:
             echo "Not workflow_run, setting is_release=true"
             echo "is_release=true" >> $GITHUB_OUTPUT
           fi
-        id: check
 
   lint:
     name: Lint

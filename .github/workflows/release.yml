@@ -24,7 +24,7 @@ permissions:
 jobs:
   release:
     name: Semantic Release
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' }}
+    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' }}
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
@@ -42,7 +42,30 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Get current version
+        id: version
+        run: |
+          echo "CURRENT_VERSION=$(node -p \"require('./package.json').version\")" >> $GITHUB_OUTPUT
+
       - name: Run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm run release
+
+      - name: Check if version bump
+        run: |
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          CURRENT_VERSION="${{ steps.version.outputs.CURRENT_VERSION }}"
+          echo "Current: $CURRENT_VERSION, New: $NEW_VERSION"
+          if [ "$CURRENT_VERSION" != "$NEW_VERSION" ]; then
+            echo "version-bump" > release-info.txt
+          else
+            echo "no-version-bump" > release-info.txt
+          fi
+        shell: bash
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-info
+          path: release-info.txt
