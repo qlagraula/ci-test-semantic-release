@@ -34,7 +34,7 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" == "workflow_run" ]; then
             MESSAGE=$(git log -1 --format=%s)
-            if echo "$MESSAGE" | grep -q "release:"; then
+            if echo "$MESSAGE" | grep -q "chore(release):"; then
               echo "is_release=true" >> $GITHUB_OUTPUT
             else
               echo "is_release=false" >> $GITHUB_OUTPUT
