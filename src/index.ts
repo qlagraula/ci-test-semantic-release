@@ -9,3 +9,6 @@ console.log(
   'If you see this message in the CI logs, it means that the pipeline is running as expected.',
 );
 console.log('Thank you for testing the CI pipeline!');
+console.log(
+  'Please feel free to make changes to this file and see how the CI pipeline responds.',
+);
