@@ -12,3 +12,6 @@ console.log('Thank you for testing the CI pipeline!');
 console.log(
   'Please feel free to make changes to this file and see how the CI pipeline responds.',
 );
+console.log(
+  'Remember to follow the Conventional Commits format for your commit messages to ensure that the CI pipeline can validate them correctly.',
+);
