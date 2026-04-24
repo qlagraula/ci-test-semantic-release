@@ -3,7 +3,15 @@ name: Deploy Staging
 on:
   push:
     tags:
-      - '*'
+      - 'v*'
+  workflow_run:
+    workflows:
+      - Release
+    types:
+      - completed
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
