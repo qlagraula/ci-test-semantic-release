@@ -20,7 +20,7 @@ permissions:
 jobs:
   lint:
     name: Deploy
-    runs-on: arc-runner-set
+    runs-on: ubuntu-24.04
     environment:
       name: ${{ inputs.environment }}
     steps:
