@@ -24,17 +24,17 @@ permissions:
 jobs:
   lint:
     name: Lint
-    uses: ./.github/workflows/lint.yml
+    uses: ./.github/workflows/jobs.lint.yml
     secrets: inherit
 
   build:
     name: Build
-    uses: ./.github/workflows/build.yml
+    uses: ./.github/workflows/jobs.build.yml
     secrets: inherit
 
   test:
     name: Test
-    uses: ./.github/workflows/test.yml
+    uses: ./.github/workflows/jobs.test.yml
     secrets: inherit
 
   deploy-preview:
@@ -43,7 +43,7 @@ jobs:
     if: |
       github.event_name == 'pull_request' 
       && (startsWith(github.actor, 'dependabot') == false)
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/jobs.deploy.yml
     with:
       environment: staging-preview
       message: ${{ github.event.pull_request.title }}

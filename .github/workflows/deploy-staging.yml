@@ -55,27 +55,27 @@ jobs:
     name: Lint
     needs: [check-release]
     if: needs.check-release.outputs.is_release == 'true'
-    uses: ./.github/workflows/lint.yml
+    uses: ./.github/workflows/jobs.lint.yml
     secrets: inherit
 
   build:
     name: Build
     needs: [check-release]
     if: needs.check-release.outputs.is_release == 'true'
-    uses: ./.github/workflows/build.yml
+    uses: ./.github/workflows/jobs.build.yml
     secrets: inherit
 
   test:
     name: Test
     needs: [check-release]
     if: needs.check-release.outputs.is_release == 'true'
-    uses: ./.github/workflows/test.yml
+    uses: ./.github/workflows/jobs.test.yml
     secrets: inherit
 
   deploy-staging:
     name: Deploy staging
     needs: [build, test, lint]
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/jobs.deploy.yml
     with:
       environment: staging
       message: ${{ github.ref_name }}
@@ -83,7 +83,7 @@ jobs:
   deploy-prod-preview:
     name: Deploy production preview
     needs: [deploy-staging]
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/jobs.deploy.yml
     with:
       environment: production-preview
       message: ${{ github.ref_name }}
