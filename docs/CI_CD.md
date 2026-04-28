@@ -173,6 +173,46 @@ flowchart TB
 
 **Validation:** Enforces conventional commit format for PR titles
 
+### 6. Hot Fix Flow
+
+When a critical bug requires immediate production deployment outside the normal release cycle:
+
+```mermaid
+flowchart TB
+    START["Critical bug in production"] --> CREATE_BRANCH["Create hotfix branch<br/>from main<br/>(e.g., hotfix/critical-bug)"]
+
+    CREATE_BRANCH --> OPEN_PR["Open PR to main<br/>(hotfix: critical fix)"]
+
+    OPEN_PR --> CI_HOTFIX["Run CI pipeline"]
+
+    CI_HOTFIX -->|Pass| REVIEW["Code Review"]
+
+    CI_HOTFIX -->|Fail| FIX_ISSUES["Fix issues"]
+
+    FIX_ISSUES --> CI_HOTFIX
+
+    REVIEW -->|Approved| MERGE["Merge to main"]
+
+    MERGE --> TRIGGER_STAGING["Deploy Staging Flow"]
+
+    TRIGGER_STAGING --> VALIDATE["Validate fix in staging"]
+
+    VALIDATE --> CREATE_RELEASE["Create GitHub Release on hotfix branch<br/>(vX.Y.Z+1, patch)"]
+
+    CREATE_RELEASE --> DEPLOY_PROD["Deploy Production<br/>(triggered by release)"]
+
+    DEPLOY_PROD --> DONE["Hot fix deployed"]
+```
+
+**Process Steps:**
+
+1. Create branch from `main`: `git checkout -b hotfix/critical-bug`
+2. Implement fix following conventional commits: `fix: critical bug description`
+3. Open PR to `main` (use normal review process)
+4. After merge, CI runs → staging deploys automatically
+5. Validate fix in staging environment
+6. **Create GitHub Release** manually with patch version (e.g., v1.2.3) on `hotfix/critical-bug` and create a tag (v1.2.3) → triggers production deployment
+
 ## Reusable Job Templates
 
 | Workflow          | Purpose                            |
