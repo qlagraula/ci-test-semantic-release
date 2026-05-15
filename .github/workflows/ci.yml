@@ -35,7 +35,6 @@ jobs:
 
   deploy-staging-preview:
     name: Build and Deploy staging preview
-    needs: [test, lint]
     uses: ./.github/workflows/jobs.deploy.yml
     with:
       preview: true
@@ -44,7 +43,6 @@ jobs:
 
   deploy-prod-preview:
     name: Build and Deploy production preview
-    needs: [test, lint]
     uses: ./.github/workflows/jobs.deploy.yml
     with:
       preview: true
