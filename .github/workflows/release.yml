@@ -25,6 +25,9 @@ jobs:
   release:
     name: Release
     if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' }}
+    outputs:
+      version_bump: ${{ steps.version_bump_check.outputs.version_bump }}
+      release_message: ${{ steps.version_bump_check.outputs.release_message }}
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
@@ -54,19 +57,42 @@ jobs:
         run: pnpm run release
 
       - name: Check if version bump
+        id: version_bump_check
         run: |
           NEW_VERSION=$(node -p "require('./package.json').version")
           CURRENT_VERSION="${{ steps.version.outputs.CURRENT_VERSION }}"
           echo "Current: $CURRENT_VERSION, New: $NEW_VERSION"
+          RELEASE_MESSAGE="${{ github.event.workflow_run.head_commit.message }}"
           if [ "$CURRENT_VERSION" != "$NEW_VERSION" ]; then
-            echo "version-bump" > release-info.txt
+            echo "version_bump=true" >> "$GITHUB_OUTPUT"
+            RELEASE_MESSAGE=$(git log -1 --pretty=%s)
           else
-            echo "no-version-bump" > release-info.txt
+            echo "version_bump=false" >> "$GITHUB_OUTPUT"
           fi
+          {
+            echo "release_message<<EOF"
+            echo "$RELEASE_MESSAGE"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
         shell: bash
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-info
-          path: release-info.txt
+  deploy-staging:
+    name: Deploy staging
+    if: ${{ needs.release.outputs.version_bump == 'true' }}
+    needs: [release]
+    uses: ./.github/workflows/jobs.deploy.yml
+    with:
+      preview: false
+      environment: staging
+      e2e-tests: true
+      message: ${{ needs.release.outputs.release_message }}
+
+  deploy-production:
+    name: Deploy production
+    if: ${{ needs.release.outputs.version_bump == 'true' }}
+    needs: [release, deploy-staging]
+    uses: ./.github/workflows/jobs.deploy.yml
+    with:
+      preview: false
+      environment: production
+      message: ${{ needs.release.outputs.release_message }}

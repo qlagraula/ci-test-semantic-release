@@ -1,7 +1,12 @@
 {
   "branches": ["main"],
   "plugins": [
-    "@semantic-release/commit-analyzer",
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits"
+      }
+    ],
     "@semantic-release/release-notes-generator",
     [
       "@semantic-release/changelog",
@@ -18,7 +23,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "pnpm run format package.json CHANGELOG.md"
+        "prepareCmd": "vp run format package.json CHANGELOG.md"
       }
     ],
     [
@@ -28,11 +33,6 @@
         "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
       }
     ],
-    [
-      "@semantic-release/github",
-      {
-        "draftRelease": true
-      }
-    ]
+    ["@semantic-release/github"]
   ]
 }

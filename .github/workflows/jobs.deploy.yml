@@ -6,9 +6,16 @@ env:
 on:
   workflow_call:
     inputs:
+      preview:
+        required: true
+        type: boolean
       environment:
         required: true
         type: string
+      e2e-tests:
+        required: false
+        type: boolean
+        default: false
       message:
         required: false
         type: string
@@ -18,7 +25,7 @@ permissions:
   actions: read
 
 jobs:
-  deploy:
+  lint:
     name: Deploy
     runs-on: ubuntu-24.04
     environment:
@@ -36,15 +43,28 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v8
+      - name: Build
+        run: pnpm turbo build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v7
         with:
           name: build
           path: dist/
 
-      - name: Get commit message
-        id: commit
+      - name: Install Playwright Browsers
+        if: ${{ inputs.e2e-tests }}
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run end-to-end tests
+        if: ${{ inputs.e2e-tests }}
         run: |
-          MESSAGE=$(git log -1 --pretty=%s ${{ github.sha }})
-          echo "Commit message: $MESSAGE"
-          echo "message=$MESSAGE" >> $GITHUB_OUTPUT
+          pnpm run test:e2e
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: e2e-test-results
+          path: playwright-report/
+          if-no-files-found: ignore
