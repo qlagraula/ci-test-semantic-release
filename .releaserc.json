@@ -28,7 +28,7 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "vp run format package.json CHANGELOG.md"
+        "prepareCmd": "pnpm run format package.json CHANGELOG.md"
       }
     ],
     [
