@@ -1,4 +1,4 @@
-name: CI
+name: CI MAIN
 
 env:
   SHOPIFY_CLI_TTY: 0
@@ -8,12 +8,12 @@ env:
   OXYGEN_DEPLOYMENT_TOKEN_PRODUCTION: ${{ secrets.OXYGEN_DEPLOYMENT_TOKEN_PRODUCTION }}
 
 on:
-  pull_request:
+  push:
     branches:
       - main
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -33,20 +33,7 @@ jobs:
     uses: ./.github/workflows/jobs.test.yml
     secrets: inherit
 
-  deploy-staging-preview:
-    name: Build and Deploy staging preview
-    needs: [test, lint]
-    uses: ./.github/workflows/jobs.deploy.yml
-    with:
-      preview: true
-      environment: staging-preview
-      message: ${{ github.event.pull_request.title }}
-
-  deploy-prod-preview:
-    name: Build and Deploy production preview
-    needs: [test, lint]
-    uses: ./.github/workflows/jobs.deploy.yml
-    with:
-      preview: true
-      environment: production-preview
-      message: ${{ github.event.pull_request.title }}
+  build:
+    name: Build
+    uses: ./.github/workflows/jobs.build.yml
+    secrets: inherit
