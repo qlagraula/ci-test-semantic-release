@@ -8,13 +8,13 @@
     "build": "tsc --outDir dist",
     "codegen": "echo \"no codegen defined\"",
     "dev": "node --watch src/index.ts",
-    "e2e": "echo \"no e2e test defined\"",
     "format": "prettier --write",
     "format:check": "prettier --check .",
     "lint": "eslint --no-error-on-unmatched-pattern .",
     "release": "semantic-release",
     "test": "echo \"no test defined\"",
     "test:ci": "echo \"no test defined\"",
+    "test:e2e": "echo \"no e2e test defined\"",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
