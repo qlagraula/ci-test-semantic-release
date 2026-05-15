@@ -1,3 +1,24 @@
+## [3.0.0](https://github.com/qlagraula/ci-test-semantic-release/compare/v2.2.0...v3.0.0) (2026-05-15)
+
+### ⚠ BREAKING CHANGES
+
+- test
+- test 2
+- test
+- test 2
+
+### Bug Fixes
+
+- fix release trigger ([#22](https://github.com/qlagraula/ci-test-semantic-release/issues/22)) ([1e2ee5c](https://github.com/qlagraula/ci-test-semantic-release/commit/1e2ee5c7ad7169408e88e436f36d1ec69c84a1b2))
+
+### Miscellaneous Chores
+
+- update workflow ([#21](https://github.com/qlagraula/ci-test-semantic-release/issues/21)) ([ca939cf](https://github.com/qlagraula/ci-test-semantic-release/commit/ca939cfdc9cb34a959e802826bfafc1e3176a191))
+
+### Continuous Integration
+
+- fix release ([#23](https://github.com/qlagraula/ci-test-semantic-release/issues/23)) ([b2a83d3](https://github.com/qlagraula/ci-test-semantic-release/commit/b2a83d38e76c439645a93310826fae0d76726420))
+
 # [2.2.0](https://github.com/qlagraula/ci-test-semantic-release/compare/v2.1.0...v2.2.0) (2026-04-24)
 
 ### Features
