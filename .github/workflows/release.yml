@@ -6,7 +6,7 @@ env:
 on:
   workflow_run:
     workflows:
-      - CI
+      - CI MAIN
     types:
       - completed
     branches:
