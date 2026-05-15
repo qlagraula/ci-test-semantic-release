@@ -52,10 +52,6 @@ jobs:
           name: build-${{ inputs.environment }}
           path: dist/
 
-      - name: Install Playwright Browsers
-        if: ${{ inputs.e2e-tests }}
-        run: pnpm exec playwright install --with-deps
-
       - name: Run end-to-end tests
         if: ${{ inputs.e2e-tests }}
         run: |
