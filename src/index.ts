@@ -16,3 +16,6 @@ console.log(
   'Remember to follow the Conventional Commits format for your commit messages to ensure that the CI pipeline can validate them correctly.',
 );
 console.log('Happy coding and testing!');
+console.log(
+  'This is the end of the test file. If you see this message, it means that the CI pipeline has successfully processed this file.',
+);
